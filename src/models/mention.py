@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, ForeignKey, Integer
+from sqlalchemy import JSON, BigInteger, Column, ForeignKey, Integer
 
 from .base import SCHEMA_NAME, Base
 
@@ -9,4 +9,4 @@ class Mention(Base):
 
     mention_id = Column(Integer, primary_key=True, autoincrement=True)
     tweet_id = Column(BigInteger, ForeignKey(f"{SCHEMA_NAME}.tweets.tweet_id"))
-    mentioned_user_id = Column(BigInteger, ForeignKey(f"{SCHEMA_NAME}.users.user_id"))
+    mentions = Column(JSON)
