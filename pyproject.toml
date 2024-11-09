@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "challenge-de"
+version = "0.1.0"
+description = ""
+authors = ["giova-schade <gio.schade.c@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+jupyterlab = "^4.3.0"
+ipykernel = "^6.29.5"
+google-auth = "^2.36.0"
+google-auth-oauthlib = "^1.2.1"
+google-auth-httplib2 = "^0.2.0"
+google-api-python-client = "^2.151.0"
+python-dotenv = "^1.0.1"
+
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

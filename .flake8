@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 350
+ignore = W291 , W503 , E203 
+exclude = .venv,*.egg,build,dist
