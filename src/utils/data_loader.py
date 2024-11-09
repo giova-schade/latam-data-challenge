@@ -1,6 +1,8 @@
 import json
 import os
+import re
 
+import emoji
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -19,6 +21,21 @@ engine = create_engine(database_url)
 Session = sessionmaker(bind=engine)
 session = Session()
 raw_data_folder = os.path.join(os.path.dirname(__file__), "../../data/raw")
+
+
+def extract_emojis(text):
+    """Extrae todos los emojis de un texto determinado."""
+    return [char for char in text if emoji.is_emoji(char)]
+
+
+def extract_mentions(text):
+    """Extrae todas las menciones de un texto dado en el formato"""
+    return re.findall(r"@\w+", text)
+
+
+def extract_hashtags(text):
+    """Extrae todos los hashtags de un texto dado en el formato #hashtag."""
+    return re.findall(r"#\w+", text)
 
 
 def process_and_load_data():
@@ -80,21 +97,47 @@ def process_and_load_data():
                                 }
                             )
 
-                        if "emojis" in data and data["emojis"] is not None:
-                            for emoji_entry in data["emojis"]:
-                                emojis_data.append(
-                                    {
-                                        "tweet_id": data["id"],
-                                        "emoji": emoji_entry["emoji"],
-                                        "count": emoji_entry.get("count", 1),
-                                    }
-                                )
+                        content_fields = [
+                            data.get("content", ""),
+                            user_data.get("description", ""),
+                        ]
+                        all_emojis = []
+                        all_mentions = []
+                        all_hashtags = []
+                        for field in content_fields:
+                            if field:
+                                found_emojis = extract_emojis(field)
+                                all_emojis.extend(found_emojis)
 
-                        if "hashtags" in data and data["hashtags"] is not None:
-                            for hashtag_entry in data["hashtags"]:
-                                hashtags_data.append(
-                                    {"tweet_id": data["id"], "hashtag": hashtag_entry}
-                                )
+                                found_mentions = extract_mentions(field)
+                                all_mentions.extend(found_mentions)
+
+                                found_hashtags = extract_hashtags(field)
+                                all_hashtags.extend(found_hashtags)
+
+                        if all_emojis:
+                            emojis_data.append(
+                                {
+                                    "tweet_id": data["id"],
+                                    "emojis": all_emojis,  # Almacena todos los emojis como un arreglo
+                                }
+                            )
+
+                        if all_mentions:
+                            mentions_data.append(
+                                {
+                                    "tweet_id": data["id"],
+                                    "mentions": all_mentions,  # Almacena todas las menciones como un arreglo
+                                }
+                            )
+
+                        if all_hashtags:
+                            hashtags_data.append(
+                                {
+                                    "tweet_id": data["id"],
+                                    "hashtags": all_hashtags,  # Almacena todos los hashtags como un arreglo
+                                }
+                            )
 
                         if "media" in data and data["media"] is not None:
                             for media_entry in data["media"]:
@@ -107,20 +150,6 @@ def process_and_load_data():
                                         "media_url": media_entry.get("url", ""),
                                     }
                                 )
-
-                        if (
-                            "mentionedUsers" in data
-                            and data["mentionedUsers"] is not None
-                        ):
-                            for mention_entry in data["mentionedUsers"]:
-                                mentioned_user_id = mention_entry["id"]
-                                if mentioned_user_id in existing_user_ids:
-                                    mentions_data.append(
-                                        {
-                                            "tweet_id": data["id"],
-                                            "mentioned_user_id": mentioned_user_id,
-                                        }
-                                    )
 
                     except json.JSONDecodeError as e:
                         print(f"Error al procesar JSON en {filename}: {e}")

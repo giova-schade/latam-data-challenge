@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, ForeignKey, Integer, String
+from sqlalchemy import JSON, BigInteger, Column, ForeignKey, Integer
 
 from .base import SCHEMA_NAME, Base
 
@@ -9,4 +9,4 @@ class Hashtag(Base):
 
     hashtag_id = Column(Integer, primary_key=True, autoincrement=True)
     tweet_id = Column(BigInteger, ForeignKey(f"{SCHEMA_NAME}.tweets.tweet_id"))
-    hashtag = Column(String(255))
+    hashtags = Column(JSON)
