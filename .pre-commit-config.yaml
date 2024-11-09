@@ -16,7 +16,6 @@ repos:
         ]
         language: python
         types: [python]
-        files: 'src/.*\\.py$'
 
       - id: flake8
         name: Flake8
@@ -24,7 +23,6 @@ repos:
         args: ['.', '--config', '.flake8']
         language: python
         types: [python]
-        files: 'src/.*\\.py$'
 
       - id: mypy
         name: Mypy
