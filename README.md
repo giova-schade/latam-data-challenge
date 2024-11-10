@@ -73,3 +73,22 @@ Returns:
 ## Sugerencias
 * Para medir la memoria en uso te recomendamos [memory-profiler](https://pypi.org/project/memory-profiler/) o [memray](https://github.com/bloomberg/memray)
 * Para medir el tiempo de ejecución te recomendamos [py-spy](https://github.com/benfred/py-spy) o [Python Profilers](https://docs.python.org/3/library/profile.html)
+
+## Configuración del Entorno
+
+1. Ejecuta el siguiente comando para instalar las dependencias necesarias:
+    poetry install
+
+2. Ejecuta Jupyter Notebook:
+    poetry run jupyter notebook
+3. Configura el kernel de Jupyter Notebook para usar el entorno de Poetry:
+poetry run ipython kernel install --user --name=nombre_del_entorno
+
+4. Manejo de credentials.json
+  El archivo credentials.json contiene información sensible y debe colocarse en la raíz del proyecto o en la carpeta src. Asegúrate de agregar credentials.json al archivo .gitignore para evitar subirlo al repositorio.
+
+5. Ejemplo de cómo incluirlo en .gitignore:
+  # .gitignore
+  credentials.json
+
+6. Renombra el archivo .env.example a .env:
